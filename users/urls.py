@@ -3,6 +3,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.UsersListCreate.as_view()),
-    path('<int:pk>/phone-numbers/', views.VirtualPhoneNumberView.as_view())
+    path('users/', views.UsersListCreate.as_view()),
+    path('user/<int:pk>/phone-numbers/', views.VirtualPhoneNumberView.as_view()) # indicates phone numbers owned by a users 
 ]

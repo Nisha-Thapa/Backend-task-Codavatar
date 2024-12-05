@@ -4,7 +4,7 @@ from .models import VirtualPhoneNumber, CallLog
 class VirtualPhoneNumberSerializer(serializers.ModelSerializer):
     class Meta:
         model = VirtualPhoneNumber
-        fields = ['id', 'number', 'user']
+        fields = ['id', 'number']
 
 class CreateVirtualPhoneNumberSerializer(serializers.ModelSerializer):
     class Meta:

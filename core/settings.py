@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     
     'rest_framework',
     'telephony',
-    'users'
+    'users',
+    'drf_yasg',
+
 ]
 
 MIDDLEWARE = [

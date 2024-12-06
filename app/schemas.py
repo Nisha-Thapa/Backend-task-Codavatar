@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import List
+import datetime
 
 class VirtualPhoneNumberBase(BaseModel):
     number: str
@@ -10,6 +11,7 @@ class VirtualPhoneNumberCreate(VirtualPhoneNumberBase):
 class VirtualPhoneNumber(VirtualPhoneNumberBase):
     id: int
     user_id: int
+    created_at: datetime.datetime  # Add created_at field to the Pydantic model
 
     class Config:
         orm_mode = True
@@ -24,6 +26,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+    created_at: datetime.datetime  # Add created_at field here as well
     virtual_phone_numbers: List[VirtualPhoneNumber] = []
 
     class Config:

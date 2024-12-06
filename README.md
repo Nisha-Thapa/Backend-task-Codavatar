@@ -29,3 +29,17 @@ You will be evaluated on the quality and correctness of the code, adherence to b
 - Submit your work by creating a pull request.
 
 Please complete the task within 2 days and notify me once your submission is ready for review.
+
+
+Instructions:
+## install requirements in your virtual env
+pip install -r requirements.txt
+
+## make sure you run makemigrations and migrate commands
+
+## makemigrations and migrate
+python manage.py makemigrations
+python manage.py migrate
+
+## API documentation
+127.0.0.1:8000/swagger/

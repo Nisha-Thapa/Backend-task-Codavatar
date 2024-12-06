@@ -5,7 +5,7 @@ class VirtualPhoneNumberBase(BaseModel):
     number: str
 
 class VirtualPhoneNumberCreate(VirtualPhoneNumberBase):
-    number: str = Field(..., regex=r"^\+?[1-9]\d{1,14}$") # Using Regex for proper number format
+    number: str = Field(..., pattern=r"^\+?[1-9]\d{1,14}$") # Using Regex for proper number format
 
 class VirtualPhoneNumber(VirtualPhoneNumberBase):
     id: int

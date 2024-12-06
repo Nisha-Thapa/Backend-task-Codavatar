@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
-from .. import schemas, crud, models
+from .. import schemas, crud
 from ..database import SessionLocal
 
 router = APIRouter()
@@ -22,4 +22,4 @@ def list_virtual_phone_numbers(user_id: int, db: Session = Depends(get_db)):
 
 @router.post("/phone-numbers/", response_model=schemas.VirtualPhoneNumber)
 def create_phone_number(number: schemas.VirtualPhoneNumberCreate, user_id: int, db: Session = Depends(get_db)):
-    return crud.create_virtual_phone_number(db, number=number.number, user_id=user_id)
+    return crud.create_virtual_phone_number(db, number=number, user_id=user_id)

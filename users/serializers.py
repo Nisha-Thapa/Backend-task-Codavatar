@@ -13,6 +13,7 @@ class UserListSerializer(serializers.ModelSerializer):
         
 
 class UsersVirtualPhoneNumberListing(serializers.ModelSerializer):
+    #including phone numbers relating to user in serializer
     phone_numbers = telephony_serializers.VirtualPhoneNumberSerializer(many=True)
     
     class Meta:

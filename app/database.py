@@ -11,7 +11,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 if DATABASE_URL is None:
     raise ValueError("DATABASE_URL is not set in the environment variables.")
 
-print(f"Loaded DATABASE_URL: {DATABASE_URL}")  # Debugging line
+print(f"Loaded DATABASE_URL: {DATABASE_URL}")
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

@@ -2,16 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import List
 from sqlalchemy.orm import Session
 from .. import schemas, crud
-from ..database import SessionLocal
+from ..database import get_db
 
 router = APIRouter()
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @router.get("/phone-numbers/", response_model=List[schemas.VirtualPhoneNumber])
 def list_virtual_phone_numbers(user_id: int, db: Session = Depends(get_db)):

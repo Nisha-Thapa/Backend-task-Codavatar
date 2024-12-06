@@ -21,6 +21,8 @@ class User(Base):
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
 
+    phone_numbers = relationship('VirtualPhoneNumber', back_populates='user', cascade='all, delete-orphan')
+
 
 class TokenTable(Base):
     __tablename__ = "token"

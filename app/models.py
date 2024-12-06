@@ -6,6 +6,7 @@ import re
 
 from sqlalchemy.types import DateTime
 
+
 class User(Base):
     __tablename__ = "users"
 
@@ -15,8 +16,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     virtual_phone_numbers = relationship("VirtualPhoneNumber", back_populates="owner")
-    
-        
+
     def __repr__(self):
         return f"<User(id={self.id}, name='{self.name}', email='{self.email}'>"
 
@@ -29,7 +29,7 @@ class VirtualPhoneNumber(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
 
     owner = relationship("User", back_populates="virtual_phone_numbers")
-    
+
     def __repr__(self):
         return f"<VirtualPhoneNumber(id={self.id}, number='{self.number}', user_id={self.user_id}>"
 
@@ -41,6 +41,6 @@ class CallLog(Base):
     virtual_phone_number_id = Column(Integer, ForeignKey("virtual_phone_numbers.id"))
     call_type = Column(String)  # "incoming" or "outgoing"
     duration = Column(Integer)  # Call duration in seconds
-    
+
     def __repr__(self):
         return f"<CallLog(id={self.id}, virtual_phone_number_id={self.virtual_phone_number_id}, call_type='{self.call_type}', duration={self.duration})>"

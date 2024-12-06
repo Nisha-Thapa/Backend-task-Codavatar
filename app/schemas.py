@@ -1,7 +1,7 @@
-from pydantic import BaseModel,  validator, EmailStr
+from pydantic import BaseModel, validator, EmailStr
 from typing import List, Optional
 
-from .validators import validate_phone_number 
+from .validators import validate_phone_number
 
 
 class VirtualPhoneNumberBase(BaseModel):
@@ -36,8 +36,10 @@ class UserBase(BaseModel):
     name: str
     email: EmailStr
 
+
 class UserCreate(UserBase):
     pass
+
 
 class User(UserBase):
     id: int

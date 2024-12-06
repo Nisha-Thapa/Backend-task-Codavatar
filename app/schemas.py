@@ -1,11 +1,11 @@
-from pydantic import BaseModel
-from typing import List, Optional
+from pydantic import BaseModel, EmailStr, Field
+from typing import List
 
 class VirtualPhoneNumberBase(BaseModel):
     number: str
 
 class VirtualPhoneNumberCreate(VirtualPhoneNumberBase):
-    pass
+    number: str = Field(..., regex=r"^\+?[1-9]\d{1,14}$") # Using Regex for proper number format
 
 class VirtualPhoneNumber(VirtualPhoneNumberBase):
     id: int
@@ -19,7 +19,8 @@ class UserBase(BaseModel):
     email: str
 
 class UserCreate(UserBase):
-    pass
+    name: str = Field(..., max_length=50, min_length=2)
+    email: EmailStr  # Validates email format
 
 class User(UserBase):
     id: int

@@ -50,7 +50,9 @@ THIRD_PARTY_APPS = [
     'drf_spectacular',
 ]
 
-CUSTOM_APPS = []
+CUSTOM_APPS = [
+    'authentication',
+]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
@@ -63,6 +65,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTH_USER_MODEL = "authentication.User"
 
 ROOT_URLCONF = 'cloud_telephony.urls'
 

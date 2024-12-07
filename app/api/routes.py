@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import crud, schemas, models
 from app.database import SessionLocal
-from app.utils import get_db,raise_http_exception
+from app.utils import get_db,raise_http_exception,get_user_or_raise
 from typing import List
 
 
@@ -18,7 +18,6 @@ def create_user(
         db.query(models.User).filter(models.User.email == user.email).first()
     )
     if existing_user:
-        # Use the helper function to raise a 400 error
         raise_http_exception(
             400, f"Email {user.email} is already registered. Use another email."
         )
@@ -35,11 +34,7 @@ def get_users(db: Session = Depends(get_db)) -> List[schemas.User]:
     response_model=List[schemas.VirtualPhoneNumber],
 )
 def read_virtual_phone_numbers(user_id: int, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
-        raise_http_exception(
-            404, f"User with id: {user_id} not found. Please create a user first."
-        )
+    get_user_or_raise(db, user_id)
     numbers = crud.get_virtual_phone_numbers(db, user_id=user_id)
     if not numbers:
         raise_http_exception(
@@ -56,12 +51,7 @@ def create_virtual_phone_number(
     phone_number: schemas.VirtualPhoneNumberCreate,
     db: Session = Depends(get_db),
 ):
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-    if not user:
-        raise_http_exception(
-            404, f"User with id: {user_id} not found. Please create a user first."
-        )
-
+    get_user_or_raise(db, user_id)
     return crud.create_virtual_phone_number(
         db, virtual_phone_number=phone_number, user_id=user_id
     )
@@ -77,10 +67,7 @@ def update_phone_number(
     phone_number_data: schemas.VirtualPhoneNumberUpdate,
     db: Session = Depends(get_db),
 ):
-
-    user = crud.get_user_by_id(db, user_id)
-    if user is None:
-        raise HTTPException(status_code=404, detail=f"User with ID {user_id} not found")
+    get_user_or_raise(db, user_id)
 
     phone_number = crud.get_virtual_phone_number_by_id_and_user(
         db, phone_number_id, user_id

@@ -3,17 +3,22 @@ from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException
 from . import models, schemas
 from app.utils import raise_http_exception
+from typing import List
 
 
-def create_user(db: Session, user: schemas.UserCreate):
-    db_user = models.User(name=user.name, email=user.email)
-    db.add(db_user)
-    db.commit()
-    db.refresh(db_user)
-    return db_user
+def create_user(db: Session, user: schemas.UserCreate) -> models.User:
+    try:
+        db_user = models.User(name=user.name, email=user.email)
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise e
 
 
-def get_users(db: Session):
+def get_users(db: Session) -> List[models.User]:
     return db.query(models.User).all()
 
 
@@ -106,3 +111,4 @@ def update_phone_number_by_user(
     except SQLAlchemyError as e:
         db.rollback()
         raise e
+

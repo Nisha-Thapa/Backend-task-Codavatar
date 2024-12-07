@@ -35,20 +35,20 @@ cloud_telephony/
 │   ├── models.py
 │   ├── schemas.py
 │   ├── database.py
-│   ├── auth_utils.py
-│   ├── auth_dependency.py
+│   ├── utils/
+│       ├── auth_utils.py
+│       ├── auth_dependency.py
 │   └── routes/
 │       ├── phone_routes.py
 │       └── auth_routes.py
 │
 ├── docker/
 │   └── Dockerfile
+│   └── requirements.txt
 │
 ├── docker-compose.yml
 │
 ├── .env
-│
-├── requirements.txt
 │
 └── README.md
 ```
@@ -128,7 +128,7 @@ cloud_telephony/
 
 ### Clone the repository
 ```bash
-git clone https://github.com/yourusername/cloud_telephony.git
+git clone https://github.com/fearalert/Associate-Backend-task-Codavatar
 cd cloud_telephony
 ```
 

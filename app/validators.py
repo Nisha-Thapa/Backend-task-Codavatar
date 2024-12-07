@@ -27,18 +27,17 @@ def validate_phone_number(value: str) -> str:
     if value.startswith("+"):
         if not value[1:].isdigit():
             raise_http_exception(
-                400,f"Phone number must contain only digits after the '+' sign.",
+                400,
+                f"Phone number must contain only digits after the '+' sign.",
             )
     elif not value.isdigit():
-        raise_http_exception(
-            400, f"Phone number must contain only digits."
-        )
+        raise_http_exception(400, f"Phone number must contain only digits.")
 
     count = len(value)
     if count < 10 or count > 15:
         raise_http_exception(
-            400,f"Phone number length must be between 10 and 15 digits. Your length is {count}.",
+            400,
+            f"Phone number length must be between 10 and 15 digits. Your length is {count}.",
         )
 
     return value
-

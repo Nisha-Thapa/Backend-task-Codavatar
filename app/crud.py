@@ -55,9 +55,7 @@ def create_virtual_phone_number(
         .first()
     )
     if existing_number:
-        raise_http_exception(
-            400,f"Phone number already exists for this user."
-        )
+        raise_http_exception(400, f"Phone number already exists for this user.")
 
     db_virtual_phone_number = models.VirtualPhoneNumber(
         **virtual_phone_number.dict(), user_id=user_id
@@ -66,6 +64,7 @@ def create_virtual_phone_number(
     db.commit()
     db.refresh(db_virtual_phone_number)
     return db_virtual_phone_number
+
 
 def update_phone_number_by_user(
     db: Session, user_id: int, phone_number_id: int, new_number: str
@@ -78,20 +77,23 @@ def update_phone_number_by_user(
         )
         .first()
     )
-    
-    if existing_number:
-        raise_http_exception(
-            400,f"Phone number already exists for this user."
-        )
 
-    phone_number = db.query(models.VirtualPhoneNumber).filter(
-        models.VirtualPhoneNumber.id == phone_number_id,
-        models.VirtualPhoneNumber.user_id == user_id,
-    ).first()
+    if existing_number:
+        raise_http_exception(400, f"Phone number already exists for this user.")
+
+    phone_number = (
+        db.query(models.VirtualPhoneNumber)
+        .filter(
+            models.VirtualPhoneNumber.id == phone_number_id,
+            models.VirtualPhoneNumber.user_id == user_id,
+        )
+        .first()
+    )
 
     if not phone_number:
         raise_http_exception(
-            404,f"Phone number with ID {phone_number_id} not found for user {user_id}",
+            404,
+            f"Phone number with ID {phone_number_id} not found for user {user_id}",
         )
 
     try:

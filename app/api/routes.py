@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app import crud, schemas, models
 from app.database import SessionLocal
-from app.utils import get_db,raise_http_exception,get_user_or_raise
+from app.utils import get_db, raise_http_exception, get_user_or_raise
 from typing import List
 
 
@@ -38,7 +38,8 @@ def read_virtual_phone_numbers(user_id: int, db: Session = Depends(get_db)):
     numbers = crud.get_virtual_phone_numbers(db, user_id=user_id)
     if not numbers:
         raise_http_exception(
-            404, f"No phone numbers found for user having user_id: {user_id}. Please add a phone number."
+            404,
+            f"No phone numbers found for user having user_id: {user_id}. Please add a phone number.",
         )
     return numbers
 

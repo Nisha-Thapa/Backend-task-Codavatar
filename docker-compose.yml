@@ -1,0 +1,46 @@
+version: '3.8'
+
+networks:
+  codavatar_python_network:
+    driver: bridge
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - ct-postgres
+    networks:
+      - codavatar_python_network
+    container_name: cloudtelephony1_python_container
+
+  ct-postgres:
+    image: postgres:latest
+    restart: always
+    container_name: cloudtelephony1_postgres_container
+    ports:
+      - "5435:5432"
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB1_USER}
+      POSTGRES_PASSWORD: ${DB1_PASSWORD}
+      POSTGRES_DB: ${DB1_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - codavatar_python_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB1_USER} -d ${DB1_NAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

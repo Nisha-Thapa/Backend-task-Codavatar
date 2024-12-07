@@ -1,0 +1,4 @@
+-r base.txt
+
+psycopg2-binary==2.9.3
+pre-commit==3.2.2

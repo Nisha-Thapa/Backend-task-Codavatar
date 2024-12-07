@@ -50,7 +50,21 @@ def get_virtual_phone_numbers(db: Session, user_id: int):
 
 def create_virtual_phone_number(
     db: Session, virtual_phone_number: schemas.VirtualPhoneNumberCreate, user_id: int
-):
+) -> models.VirtualPhoneNumber:
+    """
+    Creates a virtual phone number for the specified user.
+
+    Args:
+        db: The database session.
+        virtual_phone_number: The virtual phone number data.
+        user_id: The ID of the user for which the phone number is to be created.
+
+    Returns:
+        The created virtual phone number.
+
+    Raises:
+        HTTPException: If the phone number already exists for the specified user.
+    """
     existing_number = (
         db.query(models.VirtualPhoneNumber)
         .filter(
@@ -74,6 +88,19 @@ def create_virtual_phone_number(
 def update_phone_number_by_user(
     db: Session, user_id: int, phone_number_id: int, new_number: str
 ):
+    """
+    Updates the phone number for a specific user.
+
+    Args:
+        db (Session): The SQLAlchemy database session.
+        user_id (int): The ID of the user whose phone number is to be updated.
+        phone_number_id (int): The ID of the phone number to be updated.
+        new_number (str): The new phone number to update to.
+
+    Returns:
+        models.VirtualPhoneNumber: The updated VirtualPhoneNumber object.
+
+    """    
     existing_number = (
         db.query(models.VirtualPhoneNumber)
         .filter(
@@ -111,3 +138,6 @@ def update_phone_number_by_user(
     except SQLAlchemyError as e:
         db.rollback()
         raise e
+
+
+

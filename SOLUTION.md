@@ -19,6 +19,7 @@ This project implements a Cloud Telephony API using Django and Django Rest Frame
 - Extended Django's `AbstractUser` to create a custom user model
 - Added `contact_number` field with phone number validation
 - Allows flexible user management beyond default Django user model
+![alt text](static/image-2.png)
 
 #### Virtual Phone Number Model
 - Created to track virtual phone numbers owned by users
@@ -27,6 +28,7 @@ This project implements a Cloud Telephony API using Django and Django Rest Frame
   - Association with a specific user
   - Active/inactive status tracking
 - Enables users to manage multiple virtual numbers
+![alt text](static/image-3.png)
 
 #### Call Log Model
 - Tracks detailed call information
@@ -36,6 +38,7 @@ This project implements a Cloud Telephony API using Django and Django Rest Frame
   - Duration
   - Caller and called numbers
 - Provides comprehensive call tracking capabilities
+![alt text](static/image-4.png)
 
 ### API Endpoints
 
@@ -46,6 +49,7 @@ This project implements a Cloud Telephony API using Django and Django Rest Frame
 #### Virtual Phone Number Endpoints
 - `/api/virtual_numbers/`: List user's virtual phone numbers
 - `/api/virtual_numbers/create/`: Create a new virtual phone number
+
 
 ### Key Implementation Techniques
 
@@ -92,3 +96,85 @@ This project implements a Cloud Telephony API using Django and Django Rest Frame
 - Django Rest Framework
 - Django Simple JWT
 - Python
+
+# Project Setup and Usage Guide
+## Prerequisites
+
+Before running the project, ensure you have the following installed:
+
+- Python 3.12+
+- pip (Python package manager)
+- Django
+- Django REST framework
+
+## Setup
+
+Follow the steps below to get started with the project:
+
+### 1. Clone the Repository
+
+First, clone the repository to your local machine:
+
+```bash
+git clone https://github.com/amanpoddar375/Associate-Backend-task-Codavatar.git
+cd cloud_telephony
+```
+
+### 2. Create a Virtual Environment
+
+```bash
+python3 -m venv venv
+```
+#### i. Activate the virtual environment
+
+on mac
+```bash
+source venv/bin/activate
+```
+On windows
+```bash
+.venv\Scripts\activate
+```
+### 3. Install Required Packages
+```bash
+pip install -r requirements.txt
+
+```
+### 4. Create a .env File
+ Take reference from .env.sample 
+
+    DATABASE_NAME="<name of the database>"
+    DATABASE_USER="<name of the role/user>"
+    DATABASE_PASSWORD="<db password>"
+    DATABASE_HOST="<default is localhost unless set otherwise>"
+    DATABASE_PORT="<default is 5432 unless set otherwise>"
+
+### 5. Run Migrations
+```bash
+python manage.py migrate
+```
+### 6. Create a superuser:
+
+```bash
+python manage.py createsuperuser
+```
+
+
+Go to the Django Admin panel at http://127.0.0.1:8000/admin/ and log in using the superuser credentials.
+
+As you will be using the username and password of the superuser to get the access token
+
+## Authentication and Endpoint Access
+#### Step 1: Get the Access Token
+- Use `/api/token/`: Obtain JWT token
+![alt text](static/token.png)
+
+- Use`/api/token/refresh/`: Refresh existing token
+![alt text](static/refresh.png)
+
+#### Step 2:  Virtual Phone Number Endpoints
+- Use `/api/virtual_numbers/`: For listing user's virtual phone numbers
+![alt text](static/image.png)
+
+- Use `/api/virtual_numbers/create/`: For creating a new virtual phone number
+![alt text](static/image-1.png)

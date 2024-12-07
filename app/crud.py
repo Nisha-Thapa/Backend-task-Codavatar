@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException
 from . import models, schemas
+from app.utils import raise_http_exception
 
 
 def create_user(db: Session, user: schemas.UserCreate):
@@ -101,8 +102,8 @@ def create_virtual_phone_number(
         .first()
     )
     if existing_number:
-        raise HTTPException(
-            status_code=400, detail="Phone number already exists for this user."
+        raise_http_exception(
+            400,f"Phone number already exists for this user."
         )
 
     db_virtual_phone_number = models.VirtualPhoneNumber(
@@ -127,9 +128,10 @@ def update_phone_number_by_user(
     )
     
     if existing_number:
-        raise HTTPException(
-            status_code=400, detail="Phone number already exists for this user."
+        raise_http_exception(
+            400,f"Phone number already exists for this user."
         )
+
     
     # Get the current phone number object
     phone_number = db.query(models.VirtualPhoneNumber).filter(
@@ -138,13 +140,11 @@ def update_phone_number_by_user(
     ).first()
 
     if not phone_number:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Phone number with ID {phone_number_id} not found for user {user_id}",
+        raise_http_exception(
+            404,f"Phone number with ID {phone_number_id} not found for user {user_id}",
         )
 
     try:
-        # Update the phone number
         phone_number.number = new_number
         db.commit()
         db.refresh(phone_number)

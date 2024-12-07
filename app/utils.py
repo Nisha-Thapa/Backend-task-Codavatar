@@ -2,6 +2,8 @@ from app.database import SessionLocal
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app import models
+from typing import NoReturn, Generator
+
 
 
 def raise_http_exception(status_code: int, detail: str) -> NoReturn:

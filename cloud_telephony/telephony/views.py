@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -21,7 +20,7 @@ class VirtualPhoneNumberViewSet(viewsets.ModelViewSet):
 
     # Custom action to create a VirtualPhoneNumber for a specific user
     @action(detail=False, methods=['post'], url_path='create-for-user/(?P<user_id>\\d+)')
-    def create_for_user(self, request, user_id=None):
+    def create_for_user(self, request, user_id=None ):
         # Attempt to retrieve the user by ID
         user = User.objects.filter(id=user_id).first()
         if not user:

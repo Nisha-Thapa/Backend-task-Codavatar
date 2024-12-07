@@ -113,43 +113,38 @@ def create_virtual_phone_number(
     db.refresh(db_virtual_phone_number)
     return db_virtual_phone_number
 
-
 def update_phone_number_by_user(
     db: Session, user_id: int, phone_number_id: int, new_number: str
 ):
-    """
-    Update the phone number of a user by the given phone number ID.
+    # Check if the new number already exists for the user
+    existing_number = (
+        db.query(models.VirtualPhoneNumber)
+        .filter(
+            models.VirtualPhoneNumber.number == new_number,
+            models.VirtualPhoneNumber.user_id == user_id,
+        )
+        .first()
+    )
+    
+    if existing_number:
+        raise HTTPException(
+            status_code=400, detail="Phone number already exists for this user."
+        )
+    
+    # Get the current phone number object
+    phone_number = db.query(models.VirtualPhoneNumber).filter(
+        models.VirtualPhoneNumber.id == phone_number_id,
+        models.VirtualPhoneNumber.user_id == user_id,
+    ).first()
 
-    This function finds a virtual phone number for the given `user_id` and `phone_number_id`.
-    If the phone number exists, it updates the number with the provided `new_number`.
-    If the phone number does not exist for the specified user, the function returns `None`.
-
-    Args:
-        db (Session): The database session used to query and interact with the database.
-        user_id (int): The ID of the user to whom the phone number belongs.
-        phone_number_id (int): The ID of the phone number to be updated.
-        new_number (str): The new phone number to update.
-
-    Raises:
-        SQLAlchemyError: If there is an error while committing to the database, it raises an exception.
-
-    Returns:
-        models.VirtualPhoneNumber | None: Returns the updated virtual phone number object if successful,
-        otherwise returns `None` if the phone number is not found.
-    """
-    try:
-        phone_number = (
-            db.query(models.VirtualPhoneNumber)
-            .filter(
-                models.VirtualPhoneNumber.id == phone_number_id,
-                models.VirtualPhoneNumber.user_id == user_id,
-            )
-            .first()
+    if not phone_number:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Phone number with ID {phone_number_id} not found for user {user_id}",
         )
 
-        if phone_number is None:
-            return None
-
+    try:
+        # Update the phone number
         phone_number.number = new_number
         db.commit()
         db.refresh(phone_number)

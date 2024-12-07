@@ -111,4 +111,3 @@ def update_phone_number_by_user(
     except SQLAlchemyError as e:
         db.rollback()
         raise e
-

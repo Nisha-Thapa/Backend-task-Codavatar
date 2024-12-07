@@ -9,11 +9,10 @@ from typing import List
 router = APIRouter()
 
 
-@router.post(
-    "/users/",
-    response_model=schemas.User,
-    tags=["users"])
-def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)) -> schemas.User:
+@router.post("/users/", response_model=schemas.User, tags=["users"])
+def create_user(
+    user: schemas.UserCreate, db: Session = Depends(get_db)
+) -> schemas.User:
     """
     Creates a new user in the database.
 
@@ -24,7 +23,9 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)) -> sche
     Returns:
         The created user.
     """
-    existing_user = db.query(models.User).filter(models.User.email == user.email).first()
+    existing_user = (
+        db.query(models.User).filter(models.User.email == user.email).first()
+    )
     if existing_user:
         raise_http_exception(
             400, f"Email {user.email} is already registered. Use another email."
@@ -32,10 +33,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)) -> sche
     return crud.create_user(db=db, user=user)
 
 
-@router.get(
-    "/users/",
-    response_model=List[schemas.User],
-    tags=["users"])
+@router.get("/users/", response_model=List[schemas.User], tags=["users"])
 def get_users(db: Session = Depends(get_db)) -> List[schemas.User]:
     """
     Retrieves all users from the database.
@@ -59,7 +57,7 @@ def get_users(db: Session = Depends(get_db)) -> List[schemas.User]:
 @router.get(
     "/users/{user_id}/virtual-phone-numbers",
     response_model=List[schemas.VirtualPhoneNumber],
-    tags=["virtual phone numbers"]
+    tags=["virtual phone numbers"],
 )
 def read_virtual_phone_numbers(user_id: int, db: Session = Depends(get_db)):
     """
@@ -85,7 +83,7 @@ def read_virtual_phone_numbers(user_id: int, db: Session = Depends(get_db)):
 @router.post(
     "/users/{user_id}/virtual-phone-numbers",
     response_model=schemas.VirtualPhoneNumber,
-    tags=["virtual phone numbers"]
+    tags=["virtual phone numbers"],
 )
 def create_virtual_phone_number(
     user_id: int,
@@ -112,7 +110,7 @@ def create_virtual_phone_number(
 @router.patch(
     "/users/{user_id}/virtual_phone_numbers/{phone_number_id}",
     response_model=schemas.VirtualPhoneNumber,
-    tags=["virtual phone numbers"]
+    tags=["virtual phone numbers"],
 )
 def update_phone_number(
     user_id: int,
@@ -147,4 +145,3 @@ def update_phone_number(
     )
 
     return updated_phone_number
-

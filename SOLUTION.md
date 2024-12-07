@@ -66,9 +66,13 @@ This project implements a Cloud Telephony API using Django and Django Rest Frame
 
 #### Validation
 - Implemented custom validation for:
-  - Phone number format
+  - Phone number format and length
+    ![alt text](static/numberformat.png)
   - Preventing duplicate phone numbers
-  - Ensuring user-specific number creation
+  ![alt text](static/duplicate.png)
+  - Ensuring user-specific number creation and blank proper validation
+  ![alt text](static/blank.png)
+
 
 ## Design Rationales
 
@@ -168,8 +172,13 @@ As you will be using the username and password of the superuser to get the acces
 ![alt text](static/refresh.png)
 
 #### Step 2:  Virtual Phone Number Endpoints
-- Use `/api/virtual_numbers/`: For listing user's virtual phone numbers
+- Use `/api/virtual_numbers/`: A GET method for listing user's virtual phone numbers
+    - Use `Authorization: Bearer your_access_token`
+    - Look at the image below to get clarity about how it's done.
 ![alt text](static/image.png)
 
-- Use `/api/virtual_numbers/create/`: For creating a new virtual phone number
+- Use `/api/virtual_numbers/create/`:A POST method for creating a new virtual phone number
+    - Use `Authorization: Bearer your_access_token`
+    - Look at the image below to get clarity about how it's done.
 ![alt text](static/image-1.png)
+

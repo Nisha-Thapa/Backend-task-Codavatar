@@ -91,11 +91,6 @@ This project implements a Cloud Telephony API using Django and Django Rest Frame
 - Comprehensive call tracking
 - Flexible authentication mechanism
 
-## Technologies Used
-- Django
-- Django Rest Framework
-- Django Simple JWT
-- Python
 
 # Project Setup and Usage Guide
 ## Prerequisites

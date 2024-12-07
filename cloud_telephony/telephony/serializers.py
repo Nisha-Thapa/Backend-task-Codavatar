@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from .models import VirtualPhoneNumber, CallLog
 
 User = get_user_model()
 
@@ -49,3 +50,17 @@ class LoginSerializer(serializers.Serializer):
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
+
+class VirtualPhoneNumberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VirtualPhoneNumber
+        fields = ['id', 'phone_number', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']
+
+    def create(self, validated_data):
+        """
+        Associate the VirtualPhoneNumber with the authenticated user.
+        """
+        user = self.context['request'].user
+        validated_data['user'] = user
+        return super().create(validated_data)

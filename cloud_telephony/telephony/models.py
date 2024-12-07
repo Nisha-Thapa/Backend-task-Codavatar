@@ -45,3 +45,35 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class VirtualPhoneNumber(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="virtual_phone_numbers"
+    )
+    phone_number = models.CharField(max_length=15, unique=True)  # Assuming standard E.164 format
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.phone_number
+
+
+class CallLog(models.Model):
+    virtual_phone_number = models.ForeignKey(
+        VirtualPhoneNumber,
+        on_delete=models.CASCADE,
+        related_name="call_logs"
+    )
+    call_type = models.CharField(
+        max_length=10,
+        choices=[('INCOMING', 'Incoming'), ('OUTGOING', 'Outgoing')]
+    )
+    timestamp = models.DateTimeField(auto_now_add=True)
+    duration = models.PositiveIntegerField()  # store duration of a call in seconds
+    details = models.TextField(blank=True, null=True)  # if some details are needed
+
+    def __str__(self):
+        return f"{self.call_type} - {self.virtual_phone_number.phone_number}"

@@ -1,0 +1,32 @@
+{
+  "name": "cloud-telephony-api",
+  "version": "1.0.0",
+  "description": "cloud_telephony_api",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "nodemon --files src/index.ts"
+  },
+  "repository": "https://github.com/devTilak/Associate-Backend-task-Codavatar.git",
+  "author": "devTilak <anynomouswarrior1@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/dotenv": "^8.2.0",
+    "@types/express": "^5.0.0",
+    "@types/helmet": "^4.0.0",
+    "@types/node": "^22.10.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "http-status-codes": "^2.3.0",
+    "mongoose": "^8.8.4",
+    "nodemon": "^3.1.7",
+    "zod": "^3.23.8"
+  }
+}

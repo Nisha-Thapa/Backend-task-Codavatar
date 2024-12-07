@@ -1,6 +1,7 @@
 import { IUser, UserModel } from "./user.model";
 import { AppError } from "../../utils/errorHandler";
-import { isValidObjectId } from "mongoose";
+import { isValidObjectId, Types } from "mongoose";
+import { VirtualNumberModel } from "../virtualphonenumber/virtualNumber.model";
 
 const PAGE_SIZE = 10;
 
@@ -9,7 +10,7 @@ type GetUsersParams = {
   limit?: number;
   filter?: string;
 };
-
+type IPaginationParams = GetUsersParams;
 class UserService {
   // A function that check if the user already exists by email
   private async checkIfUserExists(email: string): Promise<boolean> {
@@ -109,6 +110,64 @@ class UserService {
           currentPage: Number(page),
           hasNextPage: page < totalPages,
           hasPreviousPage: page > 1,
+        },
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async getVirtualNumbersByUserId(id: string, params: IPaginationParams) {
+    const { page = 1, limit = PAGE_SIZE, ...rest } = params;
+    try {
+      if (!isValidObjectId(id)) {
+        throw new AppError("Invalid user ID", 400);
+      }
+
+      const searchQuery = rest.filter
+        ? {
+            $or: [{ number: { $regex: rest.filter, $options: "i" } }],
+          }
+        : {};
+
+      const aggregationPipeline = [
+        {
+          $match: {
+            userId: new Types.ObjectId(id),
+            ...searchQuery,
+          },
+        },
+        {
+          $facet: {
+            metadata: [{ $count: "totalCount" }],
+            data: [
+              { $skip: (page - 1) * limit },
+              { $limit: limit },
+              {
+                $lookup: {
+                  from: "users",
+                  localField: "userId",
+                  foreignField: "_id",
+                  as: "userDetails",
+                },
+              },
+              { $unwind: "$userDetails" },
+            ],
+          },
+        },
+      ];
+
+      const [result] = await VirtualNumberModel.aggregate(aggregationPipeline);
+
+      const totalCount = result.metadata[0]?.totalCount || 0;
+      const totalPages = Math.ceil(totalCount / limit);
+
+      return {
+        items: result.data,
+        stats: {
+          totalPages,
+          totalCount,
+          currentPage: Number(page),
         },
       };
     } catch (error) {

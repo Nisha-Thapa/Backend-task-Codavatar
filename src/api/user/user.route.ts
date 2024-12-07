@@ -6,6 +6,7 @@ import {
   updateUser,
   deleteUser,
   getUsers,
+  getVirtualNumbersByUserId,
 } from "./user.controller";
 import { createUserSchema, updateUserSchema } from "./userSchema.validate";
 
@@ -16,4 +17,6 @@ userRouter.get("/:id", getUser);
 userRouter.patch("/:id", validateData(updateUserSchema as any), updateUser);
 userRouter.delete("/:id", deleteUser);
 userRouter.get("/", getUsers);
+// get virtual numbers by user id
+userRouter.get("/:id/virtual-numbers", getVirtualNumbersByUserId);
 export default userRouter;

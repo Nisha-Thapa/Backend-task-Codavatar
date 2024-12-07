@@ -49,4 +49,27 @@ const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-export { createUser, getUser, updateUser, deleteUser, getUsers };
+const getVirtualNumbersByUserId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const virtualNumbers = await userService.getVirtualNumbersByUserId(
+      req.params.id,
+      req.query
+    );
+    res.apiSuccess("Virtual numbers retrieved successfully", virtualNumbers);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export {
+  createUser,
+  getUser,
+  updateUser,
+  deleteUser,
+  getUsers,
+  getVirtualNumbersByUserId,
+};

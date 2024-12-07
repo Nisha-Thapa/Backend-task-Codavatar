@@ -7,18 +7,18 @@ enum NumberStatus {
   PENDING = "pending",
 }
 
-enum Feature {
-  SMS = "sms",
-  VOICE = "voice",
-  VOICE_MAIL = "voice-mail",
-}
+const Feature = {
+  VOICE: "voice",
+  SMS: "sms",
+  VOICE_MAIL: "voice-mail",
+};
 
 // Define interface for the document
 interface IVirtualNumber extends Document {
   number: string;
   userId: Types.ObjectId;
   status: NumberStatus;
-  features: Feature[];
+  features: string[];
   isDeleted: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -44,12 +44,18 @@ const virtualNumberSchema = new Schema<IVirtualNumber>(
       default: NumberStatus.PENDING,
     },
 
-    features: [
-      {
-        type: String,
-        enum: Object.values(Feature),
+    features: {
+      type: [String],
+      validate: {
+        validator: function (values: string[]) {
+          return values.every((value) =>
+            Object.values(Feature).includes(value)
+          );
+        },
+        message: "Invalid feature value",
       },
-    ],
+      default: [Feature.VOICE],
+    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -65,4 +71,7 @@ virtualNumberSchema.index({ userId: 1, isDeleted: 1 });
 
 // Export the model and interfaces
 export { IVirtualNumber, NumberStatus, Feature };
-export default model<IVirtualNumber>("VirtualNumber", virtualNumberSchema);
+export const VirtualNumberModel = model<IVirtualNumber>(
+  "VirtualNumber",
+  virtualNumberSchema
+);

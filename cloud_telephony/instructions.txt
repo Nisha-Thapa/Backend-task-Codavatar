@@ -1,0 +1,36 @@
+# Cloud Telephony API Project Setup Instructions
+
+## Prerequisites
+1. Python 3.8 or above should be installed on your system.
+2. Install `pip` (Python's package installer) if not already installed.
+3. Install and set up a virtual environment package such as `virtualenv` or `venv`.
+
+Clone the Repository
+
+python -m venv venv
+
+Activate the virtual environment:
+
+pip install -r requirements.txt
+
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py runserver
+
+
+## API Endpoints
+- {{url}}/api/v1/auth/register/  (To register a new user)
+- {{url}}/api/v1/auth/login/    (To login a user)
+- {{url}}/api/v1/virtual-phone-numbers/ (To get all virtual phone numbers list for an authenticated user and to create a new virtual phone number)
+- {{url}}/api/v1/virtual-phone-numbers/<int:pk>/ (To get, update or delete a virtual phone number with a specific id)
+
+## Default Credintials
+
+** For ADMIN
+- email : admin@mail.com
+- password : P@55word
+
+** For USER
+- email : kushaldotel@gmail.com
+- password : P@55word

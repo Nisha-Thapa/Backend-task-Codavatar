@@ -55,8 +55,7 @@ def get_db():
         yield db
     finally:
         db.close()
-
-# Endpoints
+# Endpoint 1: Retrieve a list of virtual phone numbers owned by a user.
 @app.get("/users/{user_id}/virtual-phone-numbers")
 def get_virtual_phone_numbers(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()

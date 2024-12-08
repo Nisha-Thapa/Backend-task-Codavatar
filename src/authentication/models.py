@@ -1,0 +1,25 @@
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+from core.base import TimeStamp
+
+from .managers import UserManager
+
+class User(AbstractBaseUser, PermissionsMixin, TimeStamp):
+    email = models.EmailField(_("email address"), unique=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    objects = UserManager()
+
+    def __str__(self):
+        return self.email
+    
+    class Meta:
+        db_table = "users"
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")

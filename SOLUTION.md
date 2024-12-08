@@ -2,6 +2,13 @@
 
 ## Architecture Overview
 
+Implemented clean architecture on the basis of following technologies:
+
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+
 ## Core Features
 
 ### 1. User Management

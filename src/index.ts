@@ -77,6 +77,10 @@ class Server {
     await new ExpressApp(this.app).configure();
   }
 
+  public getApp(): Application {
+    return this.app;
+  }
+
   public async start(): Promise<void> {
     await this.setupDatabase();
     await this.configureRoutes();
@@ -91,3 +95,6 @@ class Server {
 
 const server = new Server();
 server.start();
+
+// Export the app instance for testing or other purposes
+export default server.getApp();

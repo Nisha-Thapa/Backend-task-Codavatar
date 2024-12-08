@@ -2,6 +2,7 @@ import { IUser, UserModel } from "./user.model";
 import { AppError } from "../../utils/errorHandler";
 import { isValidObjectId, Types } from "mongoose";
 import { VirtualNumberModel } from "../virtualphonenumber/virtualNumber.model";
+import { StatusCodes } from "http-status-codes";
 
 const PAGE_SIZE = 10;
 
@@ -11,20 +12,31 @@ type GetUsersParams = {
   filter?: string;
 };
 type IPaginationParams = GetUsersParams;
+
 class UserService {
-  // A function that check if the user already exists by email
+  /**
+   * Checks if a user with the given email already exists
+   * @private
+   * @param {string} email - The email to check
+   * @returns {Promise<boolean>} Returns true if user exists, false otherwise
+   */
   private async checkIfUserExists(email: string): Promise<boolean> {
     const existingUser = await UserModel.exists({ email });
-    // Convert to boolean - will be true if user exists, false if null
     return !!existingUser;
   }
 
+  /**
+   * Creates a new user
+   * @param {IUser} user - The user data to create
+   * @throws {AppError} Throws 409 if user already exists
+   * @throws {AppError} Throws 400 if validation fails
+   * @returns {Promise<IUser>} The created user
+   */
   async createUser(user: IUser) {
     try {
       const userExists = await this.checkIfUserExists(user.email);
-      // here userExists is a object with the user id if the user exists
       if (userExists) {
-        throw new AppError("User already exists", 409);
+        throw new AppError("User already exists", StatusCodes.CONFLICT);
       }
       const newUser = await UserModel.create(user);
       return newUser;
@@ -34,13 +46,20 @@ class UserService {
       }
       // Handle mongoose validation errors
       if (error.name === "ValidationError") {
-        throw new AppError(error.message, 400);
+        throw new AppError(error.message, StatusCodes.BAD_REQUEST);
       }
       // Handle other errors
       throw error;
     }
   }
 
+  /**
+   * Retrieves a user by their ID
+   * @param {string} id - The user ID to find
+   * @throws {AppError} Throws 400 if ID is invalid
+   * @throws {AppError} Throws 404 if user not found
+   * @returns {Promise<IUser>} The found user
+   */
   async getUserById(id: string) {
     try {
       if (!isValidObjectId(id)) {
@@ -56,6 +75,13 @@ class UserService {
     }
   }
 
+  /**
+   * Updates a user's information
+   * @param {string} id - The user ID to update
+   * @param {IUser} user - The updated user data
+   * @throws {AppError} Throws 400 if ID is invalid
+   * @returns {Promise<IUser>} The updated user
+   */
   async updateUser(id: string, user: IUser) {
     try {
       if (!isValidObjectId(id)) {
@@ -67,6 +93,13 @@ class UserService {
     }
   }
 
+  /**
+   * Deletes a user by their ID
+   * @param {string} id - The user ID to delete
+   * @throws {AppError} Throws 400 if ID is invalid
+   * @throws {AppError} Throws 404 if user not found
+   * @returns {Promise<IUser>} The deleted user
+   */
   async deleteUser(id: string) {
     try {
       if (!isValidObjectId(id)) {
@@ -82,6 +115,14 @@ class UserService {
     }
   }
 
+  /**
+   * Retrieves a paginated list of users with optional filtering
+   * @param {GetUsersParams} params - Pagination and filter parameters
+   * @param {number} [params.page=1] - The page number
+   * @param {number} [params.limit=10] - Items per page
+   * @param {string} [params.filter] - Search filter for name or email
+   * @returns {Promise<{items: IUser[], stats: object}>} Paginated users and stats
+   */
   async getUsers(params: GetUsersParams) {
     const { page = 1, limit = PAGE_SIZE, ...rest } = params;
 
@@ -117,6 +158,16 @@ class UserService {
     }
   }
 
+  /**
+   * Gets virtual numbers associated with a user
+   * @param {string} id - The user ID
+   * @param {IPaginationParams} params - Pagination and filter parameters
+   * @param {number} [params.page=1] - The page number
+   * @param {number} [params.limit=10] - Items per page
+   * @param {string} [params.filter] - Search filter for number
+   * @throws {AppError} Throws 400 if user ID is invalid
+   * @returns {Promise<{items: any[], stats: object}>} Paginated virtual numbers and stats
+   */
   async getVirtualNumbersByUserId(id: string, params: IPaginationParams) {
     const { page = 1, limit = PAGE_SIZE, ...rest } = params;
     try {

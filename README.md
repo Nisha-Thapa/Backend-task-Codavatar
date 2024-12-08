@@ -1,31 +1,51 @@
-# **Task : Cloud Telephony API Development (Scoped Version)**
-## **Description:** 
-You are tasked with building a simplied set of APIs for a cloud telephony company. The APIs will allow users to manage virtual phone numbers by creating and retrieving them. You should use a web programming framework (such as fastAPI framework) in Python and choose either REST or GraphQL as the API protocol.
-## **Requirements:**
-Design and create the necessary database models for the following entities:
-+ User: Represents a user of the cloud telephony platform.
-+ VirtualPhoneNumber: Represents a virtual phone number owned by a user.
-+ CallLog: Represents a log of phone calls made or received by a virtual phone number.
+# README
+## Cloud Telephony
+Service handler for Cloud Telephony application
 
-Implement the following API endpoints:
-+ Endpoint 1: Retrieve a list of virtual phone numbers owned by a user.
-+ Endpoint 2: Create a new virtual phone number for a user.
+> _<b>Swagger UI</b>_ </br>
+> Available at:  <br>
+> endpoint: [/ca-ct/apidoc/swagger-ui.html](http://0.0.0.0:8080/ca-ct/apidoc/swagger-ui.html) <br>
 
-## Evaluation: 
-Candidates should provide a solution that includes the following:
-- Database models representing the User and VirtualPhoneNumber entities.
-- API endpoints implemented using the chosen web programming framework (REST or GraphQL).
-- Proper request/response handling and basic validation.
-- Clear and organized code structure with appropriate comments.
 
-You will be evaluated on the quality and correctness of the code, adherence to best practices, consideration for scalability, agility and modularity, and overall approach to the task.
+Code: [Abishek Shah](mailto:developabishek@gmail.com) <br>
 
-## Task Submission Instructions
-- Fork the Repository
-- Clone the forked repository to your local system.
-- Complete the tasks as outlined in the README file.
-- Use meaningful commit messages for any changes you make.
-- Push the committed changes to your forked repository
-- Submit your work by creating a pull request.
+&copy; **2024 CodAvatar Tech Pvt. Ltd.** All Rights Reserved. </br>
+<img src="https://codavatar.com/wp-content/uploads/2023/06/codavatar-logo.svg" width="135" height="40"> <br>
+<a href="https://codavatar.com/">Site</a> &nbsp; |
 
-Please complete the task within 2 days and notify me once your submission is ready for review.
+
+## How to Run the Application
+
+### 1. Create the `.env` File
+
+Create a file named `.env` in the root directory of your project with the following content:
+
+<pre>
+DATABASE1_URL=postgresql://postgres:postgres123@ct-postgres:5432/cloudtelephony
+DB1_DRIVER_NAME=postgresql
+DB1_HOST=ct-postgres
+DB1_PORT=5432
+DB1_USER=postgres
+DB1_PASSWORD=postgres123
+DB1_NAME=cloudtelephony
+</pre>
+
+
+### 2. Run Docker Compose
+
+Make sure you have Docker and Docker Compose installed on your system. Navigate to the directory containing your `docker-compose.yml` file and run:
+```bash
+docker compose -f docker-compose.yml up --build
+```
+
+
+### 3. Alternatively run application without Docker
+
+First migrate the migration file:
+```bash
+alembic upgrade head
+```
+Then run:
+```bash
+python main.py
+```

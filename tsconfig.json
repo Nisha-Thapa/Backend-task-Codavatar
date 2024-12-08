@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "outDir": "./dist",
+    "sourceMap": true,
+    "strict": false,
+    "allowJs": true,
+    "typeRoots": ["./src/types", "./node_modules/@types"],
+  },
+  "include": ["src/**/*.ts"]
+}

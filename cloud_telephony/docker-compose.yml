@@ -1,0 +1,19 @@
+services:
+  app:
+    build: ./docker
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=${ALGORITHM}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+    volumes:
+      - ./app:/usr/src/app
+
+  sqlite:
+    image: nouchka/sqlite3
+    container_name: sqlite_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data:/data

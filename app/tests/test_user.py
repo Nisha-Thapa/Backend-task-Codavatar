@@ -182,3 +182,54 @@ def test_create_virtual_phone_number_with_existing_number(client, db):
     db.delete(db_user)
     db.commit()
 
+# Test case for retrieving virtual phone numbers owned by a user
+def test_get_virtual_phone_numbers(client, db):
+    # Create a user first
+    user_data = {
+        "name": "Test User",
+        "email": "test2@example.com",
+        "password": "testpassword"
+    }
+    response = client.post("/api/users/", json=user_data)
+    assert response.status_code == 200
+    response_data = response.json()
+    user_id = response_data["id"]
+
+    # Add some virtual phone numbers for this user
+    phone_numbers_data = [
+        {"user_id": user_id, "number": "1234567890"},
+        {"user_id": user_id, "number": "0987654321"}
+    ]
+
+    # Create the first phone number
+    response = client.post("/api/virtual-phone-numbers", json=phone_numbers_data[0])
+    assert response.status_code == 200
+
+    # Create the second phone number
+    response = client.post("/api/virtual-phone-numbers", json=phone_numbers_data[1])
+    assert response.status_code == 200
+
+    # Send a GET request to retrieve virtual phone numbers for the user
+    response = client.get(f"/api/virtual-phone-numbers/{user_id}")
+    
+    # Assert response status code is 200 (success)
+    assert response.status_code == 200
+    
+    # Assert that the response contains the correct list of virtual phone numbers
+    response_data = response.json()
+    assert isinstance(response_data, list)
+    assert len(response_data) == 2  # We created 2 phone numbers
+    
+    # Verify the phone numbers in the response match the ones created
+    assert any(phone["number"] == "1234567890" for phone in response_data)
+    assert any(phone["number"] == "0987654321" for phone in response_data)
+
+    # Clean up by deleting the created virtual phone numbers and the user
+    for phone in response_data:
+        db_phone_number = db.query(VirtualPhoneNumber).filter(VirtualPhoneNumber.id == phone["id"]).first()
+        db.delete(db_phone_number)
+        db.commit()
+
+    db_user = db.query(User).filter(User.id == user_id).first()
+    db.delete(db_user)
+    db.commit()

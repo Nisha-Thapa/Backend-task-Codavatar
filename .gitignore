@@ -3,6 +3,7 @@
 .mypy_cache
 .vscode
 __pycache__
+**/__pycache__
 .pytest_cache
 htmlcov
 dist
@@ -11,6 +12,8 @@ site
 coverage.xml
 .netlify
 test.db
+.env
+**/.env
 log.txt
 Pipfile.lock
 env3.*

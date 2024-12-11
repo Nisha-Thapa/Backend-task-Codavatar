@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.db.db import get_db
 from app.models import VirtualPhoneNumber, User
 from app.schemas.virtual_phone_number import VirtualPhoneNumberCreate, VirtualPhoneNumberResponse
+import re
 router = APIRouter()
 
 
@@ -13,6 +14,10 @@ def get_virtual_phone_numbers(user_id: int, db: Session = Depends(get_db)):
     if not phone_numbers:
         raise HTTPException(status_code=404, detail="No virtual phone numbers found for this user")
     return phone_numbers
+
+# Function to validate the phone number
+def validate_phone_number(phone_number: str) -> bool:
+    return bool(re.match(r'^\d{10}$', phone_number))
 
 # Endpoint to create a new virtual phone number
 @router.post("/virtual-phone-numbers", response_model=VirtualPhoneNumberResponse)
@@ -28,6 +33,10 @@ def create_virtual_phone_number(
     existing_phone_number = db.query(VirtualPhoneNumber).filter(VirtualPhoneNumber.number == phone_number.number).first()
     if existing_phone_number:
         raise HTTPException(status_code=400, detail="Phone number already in use")
+    
+    # Validate phone number format (must be 10 digits)
+    if not validate_phone_number(phone_number.number):
+        raise HTTPException(status_code=400, detail="Phone number must be exactly 10 digits")
 
     # Create a new virtual phone number instance with the phone number provided by the user
     db_virtual_phone_number = VirtualPhoneNumber(

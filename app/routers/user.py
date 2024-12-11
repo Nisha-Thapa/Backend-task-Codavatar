@@ -2,17 +2,13 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from app.db import get_db
 from app.models import User
-from pydantic import BaseModel
+from app.schemas.user import UserCreate
+
 from app.utils import hash_password  
 
 # Create an APIRouter instance
 router = APIRouter()
 
-# Define Pydantic schema for User creation request
-class UserCreate(BaseModel):
-    name: str
-    email: str
-    password: str  
 
 # Endpoint to create a user
 @router.post("/users/", response_model=User)

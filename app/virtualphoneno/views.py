@@ -5,6 +5,8 @@ from virtualphoneno.serializers import CreateNo, ViewNo
 from rest_framework.views import APIView
 from rest_framework.status import HTTP_201_CREATED
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication,SessionAuthentication
 
 # Create your views here.
 
@@ -12,6 +14,8 @@ from django.shortcuts import get_object_or_404
 # view to create a virtualPhoneNo
 class CreateNoView(APIView):
     serializer_class = CreateNo
+    authentication_classes=[TokenAuthentication,SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
         data = request.data
@@ -27,9 +31,12 @@ class CreateNoView(APIView):
 
 
 # view to show the virtualPhoneNo associated with the user
+
 class ShowNoView(APIView):
     serializer_class = ViewNo
-
+    authentication_classes=[TokenAuthentication,SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request, *args, **kwargs):
         data = request.data
         virtualNumbers = VirtualPhoneNo.objects.filter(owner__email=data["email"])

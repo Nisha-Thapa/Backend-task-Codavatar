@@ -10,12 +10,13 @@ class CreateUserSerializer(serializers.ModelSerializer):
         fields = ["username", "date_joined", "email", "password", "phone_no"]
 
 
-# Login serializer uses serializers only to validate the email and password fields
+# Login serializer uses serializers only to validate the email and password fields. It doesn't user model
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
 
     def validate_main(self, value):
+        # custom validation to check if email exists in database
         try:
             user = CustomUser.objects.get(email=value)
         except CustomUser.DoesNotExist:

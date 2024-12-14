@@ -26,7 +26,7 @@ class LogIn(APIView):
         if not user.check_password(data["password"]):
             return Response(HTTP_404_NOT_FOUND)
 
-        # creates new token or if already present sets available token as token
+        # creates new drf token or if already present sets available token as token
         token, created = Token.objects.get_or_create(user=user)
         return Response({"token": token.key}, HTTP_200_OK)
 
@@ -41,13 +41,15 @@ class SignUp(APIView):
 
         # will cause raise error if the serializer requirements are not met like duplicate value or missing fields
         serializer.is_valid(raise_exception=True)
+
+        # created instance is saved to user ie user holds the reference to created object
         user = serializer.save()
 
         # hashes the password
         user.set_password(data["password"])
         user.save()
 
-        # creates token to authenticate
+        # creates drf auth token to authenticate
         token = Token.objects.create(user=user)
         return Response(
             {"data": serializer.data, "token": token.key}, status=HTTP_201_CREATED

@@ -4,9 +4,10 @@ from virtualphoneno.models import VirtualPhoneNo
 
 
 # Create your models here.
+# model for call log. log persists even though the user, no or received no is deleted as it may be needed to monitor
 class CallLog(models.Model):
     called_by = models.ForeignKey(
-        CustomUser, related_name="called_by", on_delete=models.CASCADE
+        CustomUser, related_name="called_by", on_delete=models.SET_NULL, null=True
     )
     called_no = models.ForeignKey(
         VirtualPhoneNo,

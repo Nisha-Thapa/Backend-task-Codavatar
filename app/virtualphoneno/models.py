@@ -3,6 +3,8 @@ from users.models import CustomUser
 
 
 # Create your models here.
+
+# virtual phone number model
 class VirtualPhoneNo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     phone_no = models.CharField(max_length=10, unique=True)

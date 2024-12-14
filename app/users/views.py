@@ -12,15 +12,21 @@ from rest_framework.generics import get_object_or_404
 class LogIn(APIView):
     serializer_class = LoginSerializer
 
+    # gets email and password as request body and gives token to authenticate for other apis
     def post(self, request, *args, **kwargs):
         data = request.data
-        print("something")
+
         serialiser = self.serializer_class(data=data)
         serialiser.is_valid(raise_exception=True)
 
+        # gets object of email field or returns error
         user = get_object_or_404(CustomUser, email=data["email"])
+
+        # checks if hashed password in model instance matches with the current password
         if not user.check_password(data["password"]):
             return Response(HTTP_404_NOT_FOUND)
+
+        # creates new token or if already present sets available token as token
         token, created = Token.objects.get_or_create(user=user)
         return Response({"token": token.key}, HTTP_200_OK)
 
@@ -36,6 +42,8 @@ class SignUp(APIView):
         # will cause raise error if the serializer requirements are not met like duplicate value or missing fields
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+
+        # hashes the password
         user.set_password(data["password"])
         user.save()
 
